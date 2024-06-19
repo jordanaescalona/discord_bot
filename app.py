@@ -2,9 +2,10 @@ import os
 
 import discord
 import requests
+from dotenv import load_dotenv
 
-
-TOKEN = os.environ['TOKEN']
+load_dotenv()
+TOKEN = os.getenv('TOKEN')
 
 # Configuración del cliente de Discord
 intents = discord.Intents.default()
