@@ -1,7 +1,8 @@
 import os
-
 import discord
 import requests
+from flask import Flask
+from threading import Thread
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -12,6 +13,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 
+app = Flask(__name__)
 
 def get_joke():
     response = requests.get("https://v2.jokeapi.dev/joke/Any")
@@ -30,16 +32,24 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    
     if message.author == client.user:
         return
-    
+
     if message.content.lower().startswith('hello'):
-        await message.channel.send(f'¡Hello, {message.author.name}!Do you want me to tell you a joke?please type *!joke*')
+        await message.channel.send(f'¡Hello, {message.author.name}! Do you want me to tell you a joke? Please type *!joke*')
     
     if message.content.lower().startswith('!joke'):
         joke = get_joke()
         await message.channel.send(joke)
 
-# Iniciar el bot
-client.run(TOKEN)
+def run_discord_bot():
+    client.run(TOKEN)
+
+@app.route('/')
+def index():
+    return "El bot de Discord está en funcionamiento."
+
+if __name__ == '__main__':
+    # Ejecutar el bot de Discord en un hilo separado
+    Thread(target=run_discord_bot).start()
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
