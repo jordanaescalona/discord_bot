@@ -39,10 +39,10 @@ async def on_message(message):
 
 @app.route('/')
 def index():
-    return "¡El bot de Discord está funcionando!"
+    return "<h1>¡El bot de Discord está funcionando!</h1>"
 
 if __name__ == "__main__":
-    bot.loop.create_task(bot.start(TOKEN))
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT')))
+    
+	app.run(debug=True)
 
 	
